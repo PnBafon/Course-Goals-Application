@@ -28,6 +28,11 @@ const App = () => {
     console.log(goals);
   }
 
+  function deleteGoalHandler(index){
+    console.log(index)
+    setGoals((oldItems)=> oldItems.filter(item => item.id !== index))
+  }
+
   return (
     <View style={styles.container}>
       
@@ -38,7 +43,7 @@ const App = () => {
           data={goals}
           keyExtractor={(item, index)=>{ return item.id}}
           renderItem={(goalData) => (
-            <GoalItem goalData ={goalData} />
+            <GoalItem goalData ={goalData} onDeleteItem={deleteGoalHandler} />
           )}
         ></FlatList>
       </View>
