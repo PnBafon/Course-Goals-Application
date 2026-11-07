@@ -12,12 +12,14 @@ import {
 import { useState, useEffect } from "react";
 import GoalItem from "./components/GoalItem";
 import GoalInput from "./components/GoalInput";
+import { StatusBar } from "expo-status-bar";
+
 
 const App = () => {
   const [goals, setGoals] = useState([]);
+  const [modalIsVisible, setModalIsVisible] = useState(false);
 
   function addGoalHandler(goalInput) {
-  
     setGoals((goals) => [
       ...goals,
       {
@@ -25,29 +27,45 @@ const App = () => {
         id: Math.random().toString(),
       },
     ]);
-    console.log(goals);
+
+    endAddGoalHanlder()
   }
 
-  function deleteGoalHandler(index){
-    console.log(index)
-    setGoals((oldItems)=> oldItems.filter(item => item.id !== index))
+  function deleteGoalHandler(index) {
+    setGoals((oldItems) => oldItems.filter((item) => item.id !== index));
+  }
+
+  function startAddGoalHandler() {
+    setModalIsVisible(true);
+  }
+  function endAddGoalHanlder(){
+    setModalIsVisible(false)
   }
 
   return (
-    <View style={styles.container}>
-      
-      <GoalInput addGoalHandler={addGoalHandler} />
+   <>
+   <StatusBar style="light"/>
+     <View style={styles.container}>
+      <Button
+        title="Add New Goal"
+        color={"#c094f8"}
+        onPress={startAddGoalHandler}
+      />
+
+      <GoalInput addGoalHandler={addGoalHandler} modalIsVisible={modalIsVisible} endAddGoalHanlder={endAddGoalHanlder} />
       <View style={styles.listContainer}>
-        <Text>List of goals ... </Text>
         <FlatList
           data={goals}
-          keyExtractor={(item, index)=>{ return item.id}}
+          keyExtractor={(item, index) => {
+            return item.id;
+          }}
           renderItem={(goalData) => (
-            <GoalItem goalData ={goalData} onDeleteItem={deleteGoalHandler} />
+            <GoalItem goalData={goalData} onDeleteItem={deleteGoalHandler} />
           )}
         ></FlatList>
       </View>
     </View>
+   </>
   );
 };
 
@@ -58,6 +76,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 40,
     padding: 8,
+    
   },
   listContainer: {
     flex: 8,
@@ -66,5 +85,4 @@ const styles = StyleSheet.create({
     borderColor: "#eee",
     paddingTop: 8,
   },
- 
 });
